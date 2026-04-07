@@ -17,9 +17,11 @@
 
 ## Встановлення та запуск
 
+'''
 git clone https://github.com/OlehSheremet/PrivaPress.git
 cd PrivaPress
 python main.py
+'''
 
 ## Ліцензія
 
