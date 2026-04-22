@@ -1,0 +1,33 @@
+@startuml
+  left to right direction
+  actor "Гість" as Guest
+  actor "Користувач" as User
+  actor "Преміум-користувач" as Premium
+  actor "Адміністратор" as Admin
+
+  rectangle "Система PrivaPress" {
+      usecase "Імпорт медіафайлу" as UC01
+      usecase "Конвертація та стиснення" as UC02
+      usecase "Завантаження результату" as UC03
+      usecase "Перегляд історії дій" as UC04
+      usecase "Зміна бітрейту" as UC05
+      usecase "Купівля преміум-статусу" as UC06
+      usecase "Керування акаунтами" as UC07
+      usecase "Автентифікація" as UC08
+  }
+
+  User --|> Guest
+  Premium --|> User
+  Guest --> UC01
+  Guest --> UC02
+  Guest --> UC03
+  User --> UC04
+  User --> UC06
+  User --> UC08
+  Premium --> UC05
+  Admin --> UC07
+  Admin --> UC08
+  UC02 ..> UC01 : <<include>>
+  UC05 ..> UC02 : <<extend>>
+  UC04 ..> UC08 : <<include>>
+@enduml

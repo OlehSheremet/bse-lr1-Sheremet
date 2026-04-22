@@ -1,0 +1,21 @@
+@startuml
+    actor "Преміум-користувач" as P
+    participant ":UI_Interface" as UI
+    participant ":WasmProcessor" as Wasm
+    participant ":MediaFile" as File
+    participant ":HistoryRecord" as Hist
+    
+    P -> UI : Обирає файл та формат
+    UI -> File : upload()
+    File --> UI : fileData
+    P -> UI : Встановлює бітрейт (Premium)
+    UI -> Wasm : setParameters("mp4", 320)
+    UI -> Wasm : process(fileData)
+    activate Wasm
+    Wasm -> UI : notifyProgress(percentage)
+    UI -> P : відображення прогрес-бару
+    Wasm --> UI : resultBlob
+    deactivate Wasm
+    UI -> Hist : saveLocally()
+    UI -> P : Пропонує завантажити результат
+@enduml

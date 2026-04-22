@@ -1,0 +1,56 @@
+@startuml
+    class User {
+        - userId : int
+
+        - email : String
+
+        - isPremium : boolean
+        
+        + Login() : boolean
+        
+        + Logout() : void
+    }
+    class MediaFile {
+        - fileName : String
+        
+        - fileSize : long
+        
+        - format : String
+        
+        + Upload() : void
+        
+        + Download() : void
+    }
+    class WasmProcessor {
+        - targetFormat : String
+        
+        - targetBitrate : int
+        
+        + Process(file : MediaFile) : Blob
+        
+        + SetParameters(format : String, bitrate : int) : void
+    }
+    class HistoryRecord {
+        - recordId : int
+        
+        - timestamp : DateTime
+        
+        - operationType : String
+        
+        + SaveLocally() : void
+    }
+
+    class Subscription {
+        - subId : int
+        
+        - status : String
+        
+        - expiryDate : Date
+        
+        + Activate() : void
+    }
+    User "1" -- "0..*" HistoryRecord : tracks
+    User "1" -- "1" Subscription : has
+    HistoryRecord "1" -- "1" MediaFile : references
+    WasmProcessor ..> MediaFile : processes
+@enduml
