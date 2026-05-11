@@ -1,4 +1,4 @@
-from RegFunc import RegFunc
+from main.RegFunc import RegFunc
 
 def main():
     token = input('Enter login: ')
