@@ -1,0 +1,11 @@
+UML-моделі з ЛР 02 за посиланням: 
+https://github.com/OlehSheremet/bse-lr1-Sheremet/tree/main/reports/lab2 
+ 
+основний код:
+https://github.com/OlehSheremet/bse-lr1-Sheremet/blob/main/src/main/main.py
+
+посилання на тести: 
+https://github.com/OlehSheremet/bse-lr1-Sheremet/blob/main/src/test/tests.py
+
+Посилання на Git-репозиторій з кодом модуля та тестами:
+https://github.com/OlehSheremet/bse-lr1-Sheremet
