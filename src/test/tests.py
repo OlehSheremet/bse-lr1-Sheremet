@@ -1,5 +1,6 @@
 import pytest
 import datetime
+import os
 from src.main.main import MediaFile, WasmProcessor, User, Subscription
 
 #---------------------------------------------------------------------------------------------------
@@ -149,3 +150,51 @@ def test_batch_process_mixed_files():
     assert len(user.history) == 2
     assert user.history[0].operation_type == "PROCESS_SUCCESS"
     assert user.history[1].operation_type == "PROCESS_FAILED"
+
+#---------------------------------------------------------------------------------------------------
+# Ітерація 2: Додаткові тести для досягнення більшого покриття
+
+def test_subscription_activate_already_active():
+    """Техніка: EP (Клас еквівалентності). Перевірка гілки 'Підписка вже активна'."""
+    # Arrange
+    sub = Subscription(sub_id=101, status="ACTIVE", expiry_date=datetime.date(2023, 1, 1))
+    
+    # Act
+    sub.activate()
+    
+    # Assert
+    assert sub.expiry_date == datetime.date(2023, 1, 1)
+
+def test_mediafile_download():
+    """Техніка: EP (Клас еквівалентності). Позитивний тест методу download."""
+    # Arrange
+    file = MediaFile(file_name="test.mp4", file_size=1024, format="mp4")
+    
+    # Act & Assert
+    file.download()
+    assert True  # Перевірка на відсутність помилок під час виконання
+
+def test_wasmprocessor_set_parameters():
+    """Техніка: EP (Клас еквівалентності). Перевірка оновлення властивостей."""
+    # Arrange
+    processor = WasmProcessor(target_format="mp4", target_bitrate=1000)
+    
+    # Act
+    processor.set_parameters(format="webm", bitrate=3000)
+    
+    # Assert
+    assert processor.target_format == "webm"
+    assert processor.target_bitrate == 3000
+
+def test_user_logout():
+    """Техніка: EP (Клас еквівалентності). Перевірка зміни статусу логіну."""
+    # Arrange
+    sub = Subscription(1, "ACTIVE", datetime.date(2025, 1, 1))
+    user = User(user_id=1, email="test@mail.com", is_premium=False, subscription=sub)
+    user.login()  # Статус стає True
+    
+    # Act
+    user.logout()
+    
+    # Assert
+    assert user.is_logged_in is False
