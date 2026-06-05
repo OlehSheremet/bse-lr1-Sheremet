@@ -151,3 +151,4 @@ class User:
                 self.history.append(error_record)
                 error_record.save_locally()
                 print("--------------------------------------------------")
+                # Code Review Усатенко Руслан
