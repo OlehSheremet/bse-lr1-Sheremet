@@ -9,7 +9,7 @@ from src.main.main import MediaFile, WasmProcessor, User, Subscription
 def test_upload_invalid_file_size_zero():
     """Техніка: BVA (Граничне значення). Негативний тест."""
     # Arrange
-    file = MediaFile(file_name="test.mp4", file_size=0, format="mp4")
+    file = MediaFile(file_name="test.mp4", file_size=0, file_format="mp4")
 
     # Act & Assert
     with pytest.raises(ValueError, match="Неприпустимий розмір"):
@@ -18,7 +18,7 @@ def test_upload_invalid_file_size_zero():
 def test_upload_valid_minimum_file_size():
     """Техніка: BVA (Граничне значення). Позитивний тест."""
     # Arrange
-    file = MediaFile(file_name="tiny.mp4", file_size=1, format="mp4")
+    file = MediaFile(file_name="tiny.mp4", file_size=1, file_format="mp4")
 
     # Act & Assert
     file.upload()
@@ -28,7 +28,7 @@ def test_upload_network_error_simulation():
     """Техніка: EP (Клас еквівалентності). Негативний тест."""
     # Arrange
     chunk_size = 1024 * 1024 * 5
-    file = MediaFile(file_name="video_network_error.mp4", file_size=chunk_size + 100, format="mp4")
+    file = MediaFile(file_name="video_network_error.mp4", file_size=chunk_size + 100, file_format="mp4")
 
     # Act & Assert
     with pytest.raises(ConnectionError, match="Збій мережі"):
@@ -37,7 +37,7 @@ def test_upload_network_error_simulation():
 def test_upload_normal_valid_file():
     """Техніка: EP (Клас еквівалентності). Позитивний тест."""
     # Arrange
-    file = MediaFile(file_name="normal_video.mp4", file_size=2048, format="mp4")
+    file = MediaFile(file_name="normal_video.mp4", file_size=2048, file_format="mp4")
 
     # Act & Assert
     file.upload()
@@ -49,7 +49,7 @@ def test_upload_normal_valid_file():
 def test_process_invalid_format():
     """Техніка: EP (Клас еквівалентності). Негативний тест."""
     # Arrange
-    file = MediaFile(file_name="audio.mp3", file_size=1024, format="mp3")
+    file = MediaFile(file_name="audio.mp3", file_size=1024, file_format="mp3")
     processor = WasmProcessor(target_format="mp4", target_bitrate=1000)
 
     # Act & Assert
@@ -59,7 +59,7 @@ def test_process_invalid_format():
 def test_process_free_user_max_bitrate():
     """Техніка: BVA (Граничне значення). Позитивний тест."""
     # Arrange
-    file = MediaFile(file_name="video.mp4", file_size=1024, format="mp4")
+    file = MediaFile(file_name="video.mp4", file_size=1024, file_format="mp4")
     processor = WasmProcessor(target_format="webm", target_bitrate=3000)
 
     # Act
@@ -71,7 +71,7 @@ def test_process_free_user_max_bitrate():
 def test_process_free_user_exceed_bitrate():
     """Техніка: BVA (Граничне значення). Негативний тест."""
     # Arrange
-    file = MediaFile(file_name="video.mp4", file_size=1024, format="mp4")
+    file = MediaFile(file_name="video.mp4", file_size=1024, file_format="mp4")
     processor = WasmProcessor(target_format="webm", target_bitrate=3001)
 
     # Act & Assert
@@ -81,7 +81,7 @@ def test_process_free_user_exceed_bitrate():
 def test_process_premium_user_high_bitrate():
     """Техніка: EP (Клас еквівалентності). Позитивний тест."""
     # Arrange
-    file = MediaFile(file_name="hq_video.mov", file_size=1024, format="mov")
+    file = MediaFile(file_name="hq_video.mov", file_size=1024, file_format="mov")
     processor = WasmProcessor(target_format="mp4", target_bitrate=8000)
 
     # Act
@@ -93,7 +93,7 @@ def test_process_premium_user_high_bitrate():
 def test_process_corrupt_file():
     """Техніка: EP (Клас еквівалентності). Негативний тест."""
     # Arrange
-    file = MediaFile(file_name="is_corrupted_data.mp4", file_size=2048, format="mp4")
+    file = MediaFile(file_name="is_corrupted_data.mp4", file_size=2048, file_format="mp4")
     processor = WasmProcessor(target_format="mp4", target_bitrate=2000)
 
     # Act & Assert
@@ -168,7 +168,7 @@ def test_subscription_activate_already_active():
 def test_mediafile_download():
     """Техніка: EP (Клас еквівалентності). Позитивний тест."""
     # Arrange
-    file = MediaFile(file_name="test.mp4", file_size=1024, format="mp4")
+    file = MediaFile(file_name="test.mp4", file_size=1024, file_format="mp4")
     
     # Act & Assert
     file.download()

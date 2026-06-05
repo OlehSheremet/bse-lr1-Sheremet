@@ -3,6 +3,7 @@ from typing import List
 
 # --- Клас Підписки ---
 class Subscription:
+    DURATION_DAYS = 30
     def __init__(self, sub_id: int, status: str, expiry_date: datetime.date):
         self.sub_id = sub_id
         self.status = status
@@ -12,15 +13,15 @@ class Subscription:
             print(f"Підписка {self.sub_id} вже активна.")
             return
         self.status = "ACTIVE"
-        self.expiry_date = datetime.date.today() + datetime.timedelta(days=30)
+        self.expiry_date = datetime.date.today() + datetime.timedelta(days=self.DURATION_DAYS)
         print(f"Підписка {self.sub_id} успішно активована до {self.expiry_date}.")
 
 # --- Клас Медіафайлу ---
 class MediaFile:
-    def __init__(self, file_name: str, file_size: int, format: str):
-        self.file_name = file_name
-        self.file_size = file_size  # Розмір у байтах
-        self.format = format
+    def __init__(self, file_name: str, file_size: int, file_format: str): 
+        self.file_name = file_name 
+        self.file_size = file_size 
+        self.format = file_format # Властивість залишаємо, міняємо лише параметр 
 
     # НЕТРИВІАЛЬНИЙ МЕТОД 1: Цикл while, умовні конструкції та винятки
     def upload(self) -> None:
@@ -110,6 +111,15 @@ class User:
         self.is_logged_in = False
         print(f"Користувач {self.email} вийшов із системи.\n")
 
+    def _add_history_record(self, file: MediaFile, op_type: str) -> None: 
+        record = HistoryRecord(
+                record_id=len(self.history) + 1,
+                timestamp=datetime.datetime.now(),
+                operation_type=op_type,
+                media_file=file
+        )
+        self.history.append(record)
+        record.save_locally()
     # НЕТРИВІАЛЬНИЙ МЕТОД 3: Пакетна обробка, обробка винятків (try-except) та керування колекціями
     def batch_process_files(self, files: List[MediaFile], processor: WasmProcessor) -> None:
         if not self.is_logged_in:
@@ -127,14 +137,7 @@ class User:
                 result_blob = processor.process(file, self.is_premium)
                 
                 # 3. Успішне завершення - додаємо запис в історію
-                record = HistoryRecord(
-                    record_id=len(self.history) + 1,
-                    timestamp=datetime.datetime.now(),
-                    operation_type="PROCESS_SUCCESS",
-                    media_file=file
-                )
-                self.history.append(record)
-                record.save_locally()
+                self._add_history_record(file, "PROCESS_SUCCESS")
                 print("--------------------------------------------------")
 
             except (ConnectionError, ValueError, PermissionError, RuntimeError) as e:
@@ -142,12 +145,5 @@ class User:
                 print(f"[ПОМИЛКА] Збій під час операції з '{file.file_name}': {e}")
                 
                 # Фіксуємо помилку в історії
-                error_record = HistoryRecord(
-                    record_id=len(self.history) + 1,
-                    timestamp=datetime.datetime.now(),
-                    operation_type="PROCESS_FAILED",
-                    media_file=file
-                )
-                self.history.append(error_record)
-                error_record.save_locally()
+                self._add_history_record(file, "PROCESS_FAILED")
                 print("--------------------------------------------------")
